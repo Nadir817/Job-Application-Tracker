@@ -16,7 +16,20 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+db = [
+    {'id': 1, 'companyName': 'Amazon', 'workType': 'Remote', 'jobTitle': 'software engineer', 'pay': 100000},
+    {'id': 2, 'companyName': 'BoA', 'workType': 'On-Site', 'jobTitle': 'software engineer', 'pay': 123000}
+]
 
-@app.get('/')
-def main():
-    return {"msg": "Hello"}
+
+@app.get('/lists/', tags=['lists'])
+def main() -> dict:
+    return {'data': db}
+
+
+@app.post('/list/', tags=['lists'])
+async def add_list(l: dict) -> dict:
+    dummy = {'id': 0, 'companyName': '', 'workType': '', 'jobTitle': '', 'pay': 0}
+    dummy.update(**l)
+    db.append(dummy)
+    return {'data': 'new list added'}
