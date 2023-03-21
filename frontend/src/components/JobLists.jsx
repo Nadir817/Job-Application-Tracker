@@ -28,11 +28,10 @@ function AddList() {
             return;
         }
         const newList = {
-            id: lists.length + 1,
             ...item
         }
 
-        fetch("http://localhost:8000/list/", {
+        fetch("http://localhost:8000/job/", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(newList)
@@ -46,7 +45,7 @@ function AddList() {
             <form onSubmit={handleSubmit}>
                 <label className='col-sm-2 col-form-label'> Company Name
                     <input type='text' name="companyName" value={item.companyName} onChange={handleInput}
-                           class="form-control"/>
+                           className="form-control"/>
                 </label>
                 <label> Job Title
                     <input type='text' name="jobTitle" value={item.jobTitle} onChange={handleInput}
@@ -68,12 +67,13 @@ function AddList() {
 export default function JobLists() {
     const [lists, setLists] = useState([])
     const fetchLists = async () => {
-        const res = await fetch("http://localhost:8000/lists/");
+        const res = await fetch("http://localhost:8000/jobs/?skip=0&limit=100");
         const db = await res.json();
+        console.log(db)
         return db
     }
     useEffect(() => {
-        fetchLists().then(db => setLists(db.data));
+        fetchLists().then(db => setLists(db));
     }, [])
     return (
         <ListsContext.Provider value={{lists, fetchLists}}>
@@ -87,10 +87,10 @@ export default function JobLists() {
                     <th>Salary</th>
                 </tr>
                 {lists.map(ls => {
-                    const arr = Object.entries(ls).slice(1, 5)
+                    const arr = Object.entries(ls)
                     return (<tr key={ls.id}>
                         {arr.map(([k, v]) => {
-                            return (v ? <td key={k}>{v}</td> : <td key={k}> None </td>)
+                            return (v && k != 'id' ? <td key={k}>{v}</td> : null)
                         })}
                     </tr>)
                 })}
