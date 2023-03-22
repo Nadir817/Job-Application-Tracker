@@ -90,8 +90,9 @@ export default function JobLists() {
                     const arr = Object.entries(ls)
                     return (<tr key={ls.id}>
                         {arr.map(([k, v]) => {
-                            return (v && k != 'id' ? <td key={k}>{v}</td> : null)
+                            return (k != 'id' ? <td key={k}>{v}</td> : null)
                         })}
+                        <input value='delete'/>
                     </tr>)
                 })}
                 </tbody>
